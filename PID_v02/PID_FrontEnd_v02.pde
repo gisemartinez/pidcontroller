@@ -94,7 +94,7 @@ void setup()
 {
     frameRate(30);
     size(800 , 600);
-    String serialList = Serial.list();
+    String[] serialList = Serial.list();
     println("Available serial ports: " + serialList);
     
     // Communication with simmulated Arduino
@@ -218,90 +218,63 @@ void drawGraph()
     }
     //draw lines for the input, setpoint, and output
     strokeWeight(2);
-    for (int i = 0; i < nPoints - 2; i++)
-        {
+    for (int i = 0; i < nPoints - 2; i++){
         int X1 = int(ioRight - 2 - float(i) * pointWidth);
         int X2 = int(ioRight - 2 - float(i + 1) * pointWidth);
-        boolean y1Above,y1Below, y2Above, y2Below;
-        
-        
-        //DRAW THE INPUT
         boolean drawLine = true;
+
+        //DRAW THE INPUT
         stroke(255,0,0);
-        drawInputValues(InputData);
-        
+        drawLines(InputData, X1, X2, inputHeight,inputTop);
+
         //DRAW THE SETPOINT
-        drawLine = true;
         stroke(0,255,0);
-        drawInputValues(SetpointData);
-        
+        drawLines(SetpointData, X1, X2, inputHeight, inputTop);
+
         //DRAW THE OUTPUT
-        drawLine = true;
         stroke(0,0,255);
-        Y1 = OutputData[i];
-        Y2 = OutputData[i + 1];
-        
-        y1Above = (Y1 > outputHeight);
-        y1Below = (Y1 < 0);
-        y2Above = (Y2 > outputHeight);
-        y2Below = (Y2 < 0);
-        // if both points are outside the min or max, don't draw the line. If only one 
-        // point is outside constrain it to the limit, and leave the other one untouched.
-        if (y1Above) {
-            if (y2Above) drawLine = false;
-            else if (y2Below) {
-                Y1 = (int)outputHeight;
-                Y2 = 0;
-            } else Y1 = (int)outputHeight;
-        } else if (y1Below) {
-            if (y2Below) drawLine = false;
-            else if (y2Above) {
-                Y1 = 0;
-                Y2 = (int)outputHeight;
-            } else Y1 = 0;
-        } else {
-            if (y2Below) Y2 = 0;
-            else if (y2Above) Y2 = (int)outputHeight;
-        }
-        
-        if (drawLine) {
-            line(X1, outputTop + Y1, X2, outputTop + Y2);
-        }
+        drawLines(OutputData, X1, X2, outputHeight, outputTop);
     }
+    
     strokeWeight(1);
 }
 
-void drawInputValues(int[] InputData){
+void drawLines(int[] InputData, int maxHeight, int constraint, int X1, int X2){
     int Y1 = InputData[i];
     int Y2 = InputData[i + 1];
-    
-    y1Above = (Y1 > (int)inputHeight);
+    int Y1_line = Y1;
+    int Y2_line = Y2;
+
+    boolean drawLine = true;
+    boolean y1Above,y1Below, y2Above, y2Below;
+
+    y1Above = (Y1 > maxHeight);
     y1Below = (Y1 < 0);
-    y2Above = (Y2 > (int)inputHeight);
+    y2Above = (Y2 > maxHeight);
     y2Below = (Y2 < 0);
     // if both points are outside the min or max, don't draw the line. If only one 
     // point is outside constrain it to the limit, and leave the other one untouched.
     if (y1Above) {
         if (y2Above) drawLine = false;
         else if (y2Below) {
-            Y1 = (int)inputHeight;
-            Y2 = 0;
+            Y1_line = maxHeight;
+            Y2_line = 0;
         }
-        else Y1 = (int)inputHeight;
+        else Y1_line = maxHeight;
     } else if (y1Below) {
         if (y2Below) drawLine = false;
         else if (y2Above) {
-            Y1 = 0;
-            Y2 = (int)inputHeight;
+            Y1_line = 0;
+            Y2_line = maxHeight;
         }
-        else Y1 = 0;
+        else Y1_line = 0;
     } else {
-        if (y2Below) Y2 = 0;
-        else if (y2Above) Y2 = (int)inputHeight;
+        if (y2Below) Y2_line = 0;
+        else if (y2Above) Y2_line = maxHeight;
     }
     
     if (drawLine) {
-        line(X1, Y1 + inputTop, X2, Y2 + inputTop);
+        line(X1, Y1_line + constraint, X2, Y2_line + constraint);
     }
 }
 
