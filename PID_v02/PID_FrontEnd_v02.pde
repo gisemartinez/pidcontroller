@@ -225,23 +225,21 @@ void drawGraph()
 
         //DRAW THE INPUT
         stroke(255,0,0);
-        drawLines(InputData, X1, X2, inputHeight,inputTop);
+        drawLines(InputData[i], InputData[i + 1], X1, X2, (int)inputHeight,(int)inputTop);
 
         //DRAW THE SETPOINT
         stroke(0,255,0);
-        drawLines(SetpointData, X1, X2, inputHeight, inputTop);
+        drawLines(SetpointData[i], SetpointData[i + 1], X1, X2, (int)inputHeight,(int)inputTop);
 
         //DRAW THE OUTPUT
         stroke(0,0,255);
-        drawLines(OutputData, X1, X2, outputHeight, outputTop);
+        drawLines(OutputData[i], OutputData[i + 1], X1, X2, (int)outputHeight,(int)outputTop);
     }
     
     strokeWeight(1);
 }
 
-void drawLines(int[] InputData, int maxHeight, int constraint, int X1, int X2){
-    int Y1 = InputData[i];
-    int Y2 = InputData[i + 1];
+void drawLines(int Y1, int Y2, int X1, int X2, int maxHeight, int constraint){
     int Y1_line = Y1;
     int Y2_line = Y2;
 
