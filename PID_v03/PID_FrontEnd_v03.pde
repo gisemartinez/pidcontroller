@@ -244,8 +244,6 @@ void drawGraph()
 }
 
 void drawLines(int Y1, int Y2, int X1, int X2, int maxHeight, int constraint){
-    int Y1 = InputData[i];
-    int Y2 = InputData[i + 1];
     int Y1_line = Y1;
     int Y2_line = Y2;
 
